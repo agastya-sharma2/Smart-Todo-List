@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Task Organizer</title>
+</head>
+<body>
+
+    <h1>Task Organizer</h1>
+
+    <form action="/add" method="POST">
+
+        <input type="text" name="task" placeholder="Task Name" required>
+
+        <input type="number" name="estimated_time" placeholder="Minutes" required>
+
+        <input type="number" name="due_date" placeholder="Days Until Due" required>
+
+        <button type="submit">Add Task</button>
+
+    </form>
+
+    <hr>
+
+    <h2>DUE NOW</h2>
+
+    {% for task in due_now %}
+        <p>
+            <b>{{ task.task }}</b><br>
+            Time: {{ task.estimated_time }} min<br>
+            Due: {{ task.due_date }} day(s)
+        </p>
+
+        <form action="/complete/{{ task.task }}" method="POST">
+            <button type="submit">Complete</button>
+        </form>
+        
+    {% endfor %}
+
+    <h2>PACE OUT</h2>
+
+    {% for task in due_pace %}
+        <p>
+            <b>{{ task.task }}</b><br>
+            Time: {{ task.estimated_time }} min<br>
+            Due: {{ task.due_date }} day(s)
+        </p>
+
+        <form action="/complete/{{ task.task }}" method="POST">
+            <button type="submit">Complete</button>
+        </form>
+
+    {% endfor %}
+
+    <h2>DUE LATER</h2>
+
+    {% for task in due_later %}
+        <p>
+            <b>{{ task.task }}</b><br>
+            Time: {{ task.estimated_time }} min<br>
+            Due: {{ task.due_date }} day(s)
+        </p>
+
+        <form action="/complete/{{ task.task }}" method="POST">
+            <button type="submit">Complete</button>
+        </form>
+
+    {% endfor %}
+
+</body>
+</html>
