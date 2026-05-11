@@ -51,10 +51,13 @@ def organize_tasks(tasks):
         es_time = data["estimated_time"]
         due_date = data["due_date"]
 
+        paceTime = round(es_time/due_date, 10)
+
         task_data = {
             "task": task,
             "estimated_time": es_time,
-            "due_date": due_date
+            "due_date": due_date,
+            "pace_time": paceTime
         }
 
         if due_date <= DUE_THRESHOLD:
