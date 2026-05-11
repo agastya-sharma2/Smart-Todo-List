@@ -51,7 +51,7 @@ def organize_tasks(tasks):
         es_time = data["estimated_time"]
         due_date = data["due_date"]
 
-        paceTime = round(es_time/due_date, 10)
+        paceTime = round(es_time/due_date, 1)
 
         task_data = {
             "task": task,

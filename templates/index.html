@@ -49,10 +49,10 @@
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
             Due: {{ task.due_date }} day(s)
+        </div>
 
-            <div class="task-pace">
-                {{ task.pace_time }} min/day
-            </div>
+        <div class="task-pace">
+            ~{{ task.pace_time }} min/day
         </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
