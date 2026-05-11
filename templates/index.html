@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Task Organizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
 
@@ -24,46 +25,55 @@
     <h2>DUE NOW</h2>
 
     {% for task in due_now %}
-        <p>
-            <b>{{ task.task }}</b><br>
+    <div class="task-card">
+        <div class="task-title">{{ task.task }}</div>
+
+        <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
             Due: {{ task.due_date }} day(s)
-        </p>
+        </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
             <button type="submit">Complete</button>
         </form>
+    </div>
         
     {% endfor %}
 
     <h2>PACE OUT</h2>
 
     {% for task in due_pace %}
-        <p>
-            <b>{{ task.task }}</b><br>
+    <div class="task-card">
+        <div class="task-title">{{ task.task }}</div>
+
+        <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
             Due: {{ task.due_date }} day(s)
-        </p>
+        </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
             <button type="submit">Complete</button>
         </form>
-
+    </div>
+        
     {% endfor %}
 
     <h2>DUE LATER</h2>
 
     {% for task in due_later %}
-        <p>
-            <b>{{ task.task }}</b><br>
+    <div class="task-card">
+        <div class="task-title">{{ task.task }}</div>
+
+        <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
             Due: {{ task.due_date }} day(s)
-        </p>
+        </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
             <button type="submit">Complete</button>
         </form>
-
+    </div>
+        
     {% endfor %}
 
 </body>
