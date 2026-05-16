@@ -69,6 +69,13 @@ def organize_tasks(tasks):
         else:
             due_later.append(task_data)
 
+
+    sort_logic = lambda x: (x["due_date"], x["estimated_time"])
+
+    due_now.sort(key=sort_logic)
+    due_pace.sort(key=sort_logic)
+    due_later.sort(key=sort_logic)
+
     return {
         "due_now": due_now,
         "due_pace": due_pace,
