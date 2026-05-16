@@ -1,2 +1,11 @@
 .venv/
 .DS_Store
+
+__pycache__/
+*.py[codz]
+*$py.class
+
+instance/
+.webassets-cache
+
+tempCodeRunnerFile.py
