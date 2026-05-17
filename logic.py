@@ -1,5 +1,6 @@
 import json
 import os
+from datetime import datetime, date
 
 TIME_THRESHOLD = 60
 DUE_THRESHOLD = 3
@@ -30,8 +31,13 @@ def save_tasks(tasks):
 def add_task(task_name, es_time, due_date):
     tasks = load_tasks()
 
+    parsed_date = datetime.strptime(due_date, "%Y-%m-%d").date()
+    today = date.today()
+
+    daysDue = (parsed_date - today).days
+
     # Calculate the pace time
-    pace_time = round(es_time / due_date, 1) if due_date > 0 else es_time
+    pace_time = round(es_time / daysDue, 1) if daysDue > 0 else es_time
 
     # Build task object
     task_data = {
@@ -42,7 +48,7 @@ def add_task(task_name, es_time, due_date):
     }
 
     # Categorize which list it should go into
-    if due_date <= DUE_THRESHOLD:
+    if daysDue <= DUE_THRESHOLD:
         tasks["due_now"].append(task_data)
     elif es_time > TIME_THRESHOLD:
         tasks["due_pace"].append(task_data)

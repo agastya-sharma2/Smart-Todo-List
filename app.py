@@ -6,6 +6,7 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     tasks = logic.load_tasks()
+    
     return render_template(
         "index.html",
         due_now = tasks["due_now"],
@@ -17,7 +18,7 @@ def home():
 def add():
     task_name = request.form["task"]
     es_time = int(request.form["estimated_time"])
-    due_date = int(request.form["due_date"])
+    due_date = request.form.get("due_date")
 
     logic.add_task(task_name, es_time, due_date)
     return redirect("/")

@@ -14,7 +14,7 @@
 
         <input type="number" name="estimated_time" placeholder="Minutes" required>
 
-        <input type="number" name="due_date" placeholder="Days Until Due" required>
+        <input type="date" name="due_date" placeholder="Due Date" required>
 
         <button type="submit">Add Task</button>
 
@@ -30,7 +30,7 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
@@ -48,7 +48,7 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
         <div class="task-pace">
@@ -70,7 +70,7 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
         <form action="/complete/{{ task.task }}" method="POST">
