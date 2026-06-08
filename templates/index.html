@@ -14,7 +14,7 @@
 
         <input type="number" name="estimated_time" placeholder="Minutes" required>
 
-        <input type="number" name="due_date" placeholder="Days Until Due" required>
+        <input type="date" name="due_date" placeholder="Due Date" required>
 
         <button type="submit">Add Task</button>
 
@@ -30,11 +30,19 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
-            <button type="submit">Complete</button>
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
+            
+            {% if task.is_slice %}
+                <input type="hidden" name="is_slice" value="True">
+                <input type="hidden" name="parent_name" value="{{ task.parent_task }}">
+                <button type="submit">Complete Slice</button>
+            {% else %}
+                <button type="submit">Complete</button>
+            {% endif %}
         </form>
     </div>
         
@@ -48,14 +56,15 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
         <div class="task-pace">
             ~{{ task.pace_time }} min/day
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
             <button type="submit">Complete</button>
         </form>
     </div>
@@ -70,10 +79,11 @@
 
         <div class="task-info">
             Time: {{ task.estimated_time }} min<br>
-            Due: {{ task.due_date }} day(s)
+            Due: {{ task.daysDue }} day(s)
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
             <button type="submit">Complete</button>
         </form>
     </div>
