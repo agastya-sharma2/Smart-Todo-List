@@ -33,8 +33,16 @@
             Due: {{ task.daysDue }} day(s)
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
-            <button type="submit">Complete</button>
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
+            
+            {% if task.is_slice %}
+                <input type="hidden" name="is_slice" value="True">
+                <input type="hidden" name="parent_name" value="{{ task.parent_task }}">
+                <button type="submit">Complete Slice</button>
+            {% else %}
+                <button type="submit">Complete</button>
+            {% endif %}
         </form>
     </div>
         
@@ -55,7 +63,8 @@
             ~{{ task.pace_time }} min/day
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
             <button type="submit">Complete</button>
         </form>
     </div>
@@ -73,7 +82,8 @@
             Due: {{ task.daysDue }} day(s)
         </div>
 
-        <form action="/complete/{{ task.task }}" method="POST">
+        <form action="/complete" method="POST">
+            <input type="hidden" name="task_name" value="{{ task.task }}">
             <button type="submit">Complete</button>
         </form>
     </div>

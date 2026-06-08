@@ -44,6 +44,25 @@ def refresh(raw):
         # Sort into the correct category based on today's remaining days
         if es_time > TIME_THRESHOLD:
             updated_tasks["due_pace"].append(task)
+
+            # Check if it was already completed today
+            # We compare the string date to today's string date
+            today_str = today.strftime("%Y-%m-%d")
+            already_done_today = task.get("last_completed") == today_str
+
+            if daysDue >= 0 and not already_done_today:
+                daily_slice = {
+                    "task": f"Daily Slice: {task['task']}",
+                    "parent_task": task["task"],
+                    "estimated_time": task["pace_time"],
+                    "due_date": today.strftime("%Y-%m-%d"),
+                    "daysDue": 0,
+                    "completed_today": False,
+                    "last_completed": task.get("last_completed", ""),
+                    "is_slice": True
+                }
+                updated_tasks["due_now"].append(daily_slice)
+
         elif daysDue <= DUE_THRESHOLD:
             updated_tasks["due_now"].append(task)
         else:
@@ -55,11 +74,21 @@ def refresh(raw):
 def save_tasks(tasks):
     # Sorts tasks by due date then estimated time
     sort_logic = lambda x: (x["due_date"], x["estimated_time"])
-    for category in tasks:
-        tasks[category].sort(key=sort_logic)
+    
+    # 1. Filter out the temporary "is_slice" tasks so they don't save to JSON
+    cleaned_tasks = {
+        "due_now": [t for t in tasks["due_now"] if not t.get("is_slice")],
+        "due_pace": [t for t in tasks["due_pace"] if not t.get("is_slice")],
+        "due_later": [t for t in tasks["due_later"] if not t.get("is_slice")]
+    }
+
+    # 2. Strip out 'daysDue' if you want to keep the JSON perfectly pristine, 
+    # though filtering the slices alone fixes your ghost bug.
+    for category in cleaned_tasks:
+        cleaned_tasks[category].sort(key=sort_logic)
 
     with open(TASKS_FILE, "w") as file:
-        json.dump(tasks, file, indent=4)
+        json.dump(cleaned_tasks, file, indent=4)
 
 
 def add_task(task_name, es_time, due_date):
@@ -77,7 +106,10 @@ def add_task(task_name, es_time, due_date):
         "task": task_name,
         "estimated_time": es_time,
         "due_date": due_date,
-        "pace_time": pace_time
+        "pace_time": pace_time,
+        "completed_today": False,
+        "last_completed": "",
+        "is_slice": False
     }
 
     # Temporarily stuff task into "due_later" so that it's there ready for it to be sorted by "refresh()"
@@ -89,13 +121,22 @@ def add_task(task_name, es_time, due_date):
     # Save file
     save_tasks(final_tasks)
 
-def remove_task(task_name):
+def remove_task(task_name, is_slice=False, parent_name=None):
     tasks = load_tasks()
 
-    # Looks through each category
-    for category in tasks:
-        # Essentially makes a copy of tasks.json except for the task we want to delete
-        tasks[category] = [t for t in tasks[category] if t["task"] != task_name]
+    if is_slice and parent_name:
+        # Scenario A: User completed a daily slice.
+        # Don't delete the parent task! Just stamp it so the slice hides for today.
+        today_str = date.today().strftime("%Y-%m-%d")
+        for category in tasks:
+            for task in tasks[category]:
+                if task["task"] == parent_name:
+                    task["last_completed"] = today_str
+    else:
+        # Scenario B: User completed/deleted a regular task (or made a typo).
+        # Completely wipe it from the JSON.
+        for category in tasks:
+            tasks[category] = [t for t in tasks[category] if t["task"] != task_name]
 
-    # Replaces tasks.json with this new copy
+    # Save the updated state
     save_tasks(tasks)

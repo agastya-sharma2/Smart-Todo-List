@@ -23,9 +23,13 @@ def add():
     logic.add_task(task_name, es_time, due_date)
     return redirect("/")
 
-@app.route("/complete/<task_name>", methods=["POST"])
-def complete(task_name):
-    logic.remove_task(task_name)
+@app.route("/complete", methods=["POST"])
+def complete():
+    task_name = request.form.get('task_name')
+    is_slice = request.form.get('is_slice') == 'True'
+    parent_name = request.form.get('parent_name')
+
+    logic.remove_task(task_name, is_slice=is_slice, parent_name=parent_name)
     return redirect("/")
 
 
