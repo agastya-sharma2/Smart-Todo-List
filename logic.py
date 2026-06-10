@@ -99,7 +99,8 @@ def add_task(task_name, es_time, due_date):
     today = date.today()
     daysDue = (parsed_date - today).days
 
-    pace_time = round(es_time / daysDue, 1) if daysDue > 0 else es_time
+    pace_time = int(round(es_time / daysDue, 0)) if daysDue > 0 else es_time
+    
 
     # Build task object
     task_data = {
