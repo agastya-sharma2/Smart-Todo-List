@@ -1,6 +1,7 @@
 import json
 import os
 from datetime import datetime, date
+import time
 
 TIME_THRESHOLD = 60
 DUE_THRESHOLD = 3
@@ -108,6 +109,7 @@ def add_task(task_name, es_time, due_date):
         "estimated_time": es_time,
         "due_date": due_date,
         "pace_time": pace_time,
+        "current_time": 0,
         "completed_today": False,
         "last_completed": "",
         "is_slice": False
@@ -126,16 +128,19 @@ def remove_task(task_name, is_slice=False, parent_name=None):
     tasks = load_tasks()
 
     if is_slice and parent_name:
-        # Scenario A: User completed a daily slice.
-        # Don't delete the parent task! Just stamp it so the slice hides for today.
+        # Scenario A: User completed a daily slice
+        # Hide today's slice
         today_str = date.today().strftime("%Y-%m-%d")
         for category in tasks:
-            for task in tasks[category]:
+            for task in tasks[category]: 
                 if task["task"] == parent_name:
-                    task["last_completed"] = today_str
+                    task["last_completed"] = today_str # "task" in this case is the parent
+                    task["current_time"] += task["pace_time"]
+                    if task["current_time"] == task["estimated_time"]:
+                        tasks[category] = [t for t in tasks[category] if t["task"] != task["task"]]
     else:
-        # Scenario B: User completed/deleted a regular task (or made a typo).
-        # Completely wipe it from the JSON.
+        # Scenario B: User completed a regular task
+        # Delete as usual
         for category in tasks:
             tasks[category] = [t for t in tasks[category] if t["task"] != task_name]
 

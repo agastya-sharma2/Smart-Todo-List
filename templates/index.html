@@ -63,6 +63,10 @@
             ~{{ task.pace_time }} min/day
         </div>
 
+        <div class="progress-container" style="background-color: #140a1e; border-radius: 10px; width: 100%; max-width: 200px; height: 8px; margin-top: 8px;">
+            <div class="progress-bar" style="background-color: #a855f7; height: 100%; border-radius: 10px; --progress-width: {{ (task.current_time / task.estimated_time) * 100 }}%; width: var(--progress-width);"></div>
+        </div>
+
         <form action="/complete" method="POST">
             <input type="hidden" name="task_name" value="{{ task.task }}">
             <button type="submit">Complete</button>
