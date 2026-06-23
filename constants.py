@@ -1,0 +1,3 @@
+TIME_THRESHOLD = 60
+DUE_THRESHOLD = 3
+TASKS_FILE = "tasks.json"
